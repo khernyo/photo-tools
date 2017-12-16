@@ -35,7 +35,7 @@ fn main() {
         if let Ok(e) = entry {
             let path = e.path();
             if e.is_file() {
-                if e.has_extension_ignorecase(&["jpg", "cr2"]) {
+                if e.has_extension_ignorecase(&["jpg", "cr2", "mp4"]) {
                     let file_name = e.file_name().to_string_lossy();
                     let parent = path.parent().unwrap();
                     let parent_name = parent.file_name().unwrap().to_string_lossy();
