@@ -73,7 +73,7 @@ fn main() {
                     let create_date_output = Command::new("exiftool")
                         .args(&["-CreateDate", "-b", path.to_str().unwrap()])
                         .output()
-                        .unwrap();
+                        .expect("Error while running exiftool");
                     assert!(create_date_output.status.success());
 
                     let create_date = String::from_utf8(create_date_output.stdout).unwrap();
