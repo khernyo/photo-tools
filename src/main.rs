@@ -58,7 +58,7 @@ fn main() {
                     let file_number = &FILE_NUMBER_RE
                         .captures_iter(file_name.as_ref())
                         .next()
-                        .unwrap()
+                        .expect(&format!("Could not determine file number: {}", file_name.as_ref()))
                         [1];
 
                     assert!(
