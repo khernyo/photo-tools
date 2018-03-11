@@ -1,17 +1,10 @@
 extern crate clap;
-#[macro_use]
-extern crate lazy_static;
 extern crate regex;
 extern crate walkdir;
 
 use std::path::Path;
 use std::process::Command;
 use clap::{App, Arg};
-use regex::Regex;
-
-lazy_static! {
-    static ref FILE_NUMBER_RE: Regex = Regex::new(r#"^.*_([0-9]+)\.[^.]+$"#).unwrap();
-}
 
 fn main() {
     let arg_src_dir = Arg::with_name("src-dir")
@@ -36,7 +29,6 @@ fn main() {
             let path = e.path();
             if e.is_file() {
                 if e.has_extension_ignorecase(&["jpg", "cr2", "mp4"]) {
-                    let file_name = e.file_name().to_string_lossy();
                     let parent = path.parent().unwrap();
                     let parent_name = parent.file_name().unwrap().to_string_lossy();
                     let parent_parent = path.parent().unwrap().parent().unwrap();
