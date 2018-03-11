@@ -55,11 +55,7 @@ fn main() {
                     );
 
                     let dir_number = &parent_name.as_ref().drop_tail("CANON");
-                    let file_number = &FILE_NUMBER_RE
-                        .captures_iter(file_name.as_ref())
-                        .next()
-                        .expect(&format!("Could not determine file number: {}", file_name.as_ref()))
-                        [1];
+                    let file_number = exif_info("FileIndex", path);
 
                     assert!(
                         dir_number.parse::<u32>().is_ok(),
