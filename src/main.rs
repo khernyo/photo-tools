@@ -70,13 +70,7 @@ fn main() {
                         format!("Invalid file number: {} from {:?}", file_number, e)
                     );
 
-                    let create_date_output = Command::new("exiftool")
-                        .args(&["-CreateDate", "-b", path.to_str().unwrap()])
-                        .output()
-                        .expect("Error while running exiftool");
-                    assert!(create_date_output.status.success());
-
-                    let create_date = String::from_utf8(create_date_output.stdout).unwrap();
+                    let create_date = exif_info("CreateDate", path);
                     let dst_extension = path.extension().unwrap().to_string_lossy().to_lowercase();
                     let target_filename = format!(
                         "{}_{}-{}.{}",
@@ -123,6 +117,16 @@ fn main() {
             panic!("{:?}", entry);
         }
     }
+}
+
+fn exif_info(field: &str, path: &std::path::Path) -> String {
+    let result = Command::new("exiftool")
+        .args(&[&format!("-{}", field), "-b", path.to_str().unwrap()])
+        .output()
+        .expect("Error while running exiftool");
+    assert!(result.status.success());
+
+    String::from_utf8(result.stdout).unwrap()
 }
 
 use walkdir::{DirEntry, WalkDir};
