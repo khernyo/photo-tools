@@ -1,29 +1,28 @@
+#![feature(proc_macro)]
 extern crate clap;
 extern crate regex;
+extern crate thunder;
 extern crate walkdir;
 
 use std::path::Path;
 use std::process::Command;
-use clap::{App, Arg};
+
+use thunder::thunderclap;
+
+struct PhotoTools;
+
+#[thunderclap]
+impl PhotoTools {
+    fn get(src_dir: &str, dst_dir: &str) {
+        get(src_dir, dst_dir)
+    }
+}
 
 fn main() {
-    let arg_src_dir = Arg::with_name("src-dir")
-        .help("Dir to copy photos from")
-        .required(true)
-        .index(1);
-    let arg_dst_dir = Arg::with_name("dst-dir")
-        .help("Dir to copy photos from")
-        .required(true)
-        .index(2);
+    PhotoTools::start();
+}
 
-    let matches = App::new("photo-tools")
-        .arg(arg_src_dir.clone())
-        .arg(arg_dst_dir.clone())
-        .get_matches();
-
-    let src_dir = matches.value_of(arg_src_dir.b.name).unwrap();
-    let dst_base_dir = matches.value_of(arg_dst_dir.b.name).unwrap();
-
+fn get(src_dir: &str, dst_base_dir: &str) {
     for entry in WalkDir::new(src_dir) {
         if let Ok(e) = entry {
             let path = e.path();
