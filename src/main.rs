@@ -1,25 +1,27 @@
 #![feature(proc_macro)]
 extern crate clap;
 extern crate regex;
-extern crate thunder;
+#[macro_use]
+extern crate structopt;
 extern crate walkdir;
 
 use std::path::Path;
 use std::process::Command;
 
-use thunder::thunderclap;
+use structopt::StructOpt;
 
-struct PhotoTools;
+#[derive(StructOpt)]
+struct Opts {
+    #[structopt(name = "src-dir")]
+    src_dir: String,
 
-#[thunderclap]
-impl PhotoTools {
-    fn get(src_dir: &str, dst_dir: &str) {
-        get(src_dir, dst_dir)
-    }
+    #[structopt(name = "dst-dir")]
+    dst_base_dir: String,
 }
 
 fn main() {
-    PhotoTools::start();
+    let opts = Opts::from_args();
+    get(&opts.src_dir, &opts.dst_base_dir);
 }
 
 fn get(src_dir: &str, dst_base_dir: &str) {
