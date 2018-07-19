@@ -1,4 +1,3 @@
-#![feature(proc_macro)]
 extern crate clap;
 extern crate regex;
 #[macro_use]
@@ -36,8 +35,7 @@ fn get(src_dir: &str, dst_base_dir: &str) {
                     let parent_parent_name = parent_parent.file_name().unwrap().to_string_lossy();
 
                     assert_eq!(
-                        parent_parent_name,
-                        "DCIM",
+                        parent_parent_name, "DCIM",
                         "Unexpected directory structure: {:?}",
                         e
                     );
