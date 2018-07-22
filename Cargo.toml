@@ -2,4 +2,5 @@
 
 members = [
   "cmd/get",
+  "cmd/digikam-find-exact-duplicates",
 ]
