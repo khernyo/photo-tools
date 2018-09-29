@@ -1,4 +1,6 @@
 extern crate clap;
+#[macro_use]
+extern crate lazy_static;
 extern crate regex;
 #[macro_use]
 extern crate structopt;
@@ -7,7 +9,12 @@ extern crate walkdir;
 use std::path::Path;
 use std::process::Command;
 
+use regex::Regex;
 use structopt::StructOpt;
+
+lazy_static! {
+    static ref FILE_NUMBER_RE: Regex = Regex::new(r#"^.*_([0-9]+)\.[^.]+$"#).unwrap();
+}
 
 #[derive(StructOpt)]
 struct Opts {
@@ -33,6 +40,10 @@ fn get(src_dir: &str, dst_base_dir: &str) {
                     let parent_name = parent.file_name().unwrap().to_string_lossy();
                     let parent_parent = path.parent().unwrap().parent().unwrap();
                     let parent_parent_name = parent_parent.file_name().unwrap().to_string_lossy();
+                    let file_name = e
+                        .file_name()
+                        .to_str()
+                        .unwrap_or_else(|| panic!("Can't handle filename: {:?}", e.file_name()));
 
                     assert_eq!(
                         parent_parent_name, "DCIM",
@@ -46,16 +57,28 @@ fn get(src_dir: &str, dst_base_dir: &str) {
                     );
 
                     let dir_number = &parent_name.as_ref().drop_tail("CANON");
-                    let file_number = exif_info("FileIndex", path);
-
                     assert!(
                         dir_number.parse::<u32>().is_ok(),
                         format!("Invalid dir number: {} from {:?}", dir_number, e)
                     );
-                    assert!(
-                        file_number.parse::<u32>().is_ok(),
-                        format!("Invalid file number: {} from {:?}", file_number, e)
-                    );
+
+                    let file_number_from_fname = FILE_NUMBER_RE
+                        .captures_iter(file_name)
+                        .next()
+                        .unwrap_or_else(|| {
+                            panic!("Could not determine file number: {}", file_name)
+                        })[1]
+                        .parse::<u32>();
+                    let file_number_from_exif = exif_info("FileIndex", path).parse::<u32>();
+                    let file_number = file_number_from_exif
+                        .clone()
+                        .or_else(|_| file_number_from_fname.clone())
+                        .unwrap_or_else(|_| {
+                            panic!(
+                                "Could not determine file number: {:?} {:?}",
+                                file_number_from_fname, file_number_from_exif
+                            )
+                        });
 
                     let create_date = exif_info("CreateDate", path);
                     let dst_extension = path.extension().unwrap().to_string_lossy().to_lowercase();
