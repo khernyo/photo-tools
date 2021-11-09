@@ -6,4 +6,4 @@ authors = ["Szabolcs Berecz <szabolcs.berecz@gmail.com>"]
 [dependencies]
 chrono = { version = "0.4.4", features = ["serde"] }
 dotenv = "0.13.0"
-rusqlite = "0.13.0"
+rusqlite = "0.14.0"
