@@ -2,7 +2,6 @@ extern crate clap;
 #[macro_use]
 extern crate lazy_static;
 extern crate regex;
-#[macro_use]
 extern crate structopt;
 extern crate walkdir;
 
@@ -59,7 +58,7 @@ fn get(src_dir: &str, dst_base_dir: &str) {
                     let dir_number = &parent_name.as_ref().drop_tail("CANON");
                     assert!(
                         dir_number.parse::<u32>().is_ok(),
-                        format!("Invalid dir number: {} from {:?}", dir_number, e)
+                        "Invalid dir number: {} from {:?}", dir_number, e
                     );
 
                     let file_number_from_fname = FILE_NUMBER_RE
