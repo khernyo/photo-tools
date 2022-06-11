@@ -58,7 +58,9 @@ fn get(src_dir: &str, dst_base_dir: &str) {
                     let dir_number = &parent_name.as_ref().drop_tail("CANON");
                     assert!(
                         dir_number.parse::<u32>().is_ok(),
-                        "Invalid dir number: {} from {:?}", dir_number, e
+                        "Invalid dir number: {} from {:?}",
+                        dir_number,
+                        e
                     );
 
                     let file_number_from_fname = FILE_NUMBER_RE
@@ -110,13 +112,11 @@ fn get(src_dir: &str, dst_base_dir: &str) {
                     } else {
                         println!("Copying {:?} to {:?}", path, target);
                         std::fs::create_dir_all(target.parent().unwrap()).unwrap();
-                        assert!(
-                            Command::new("cp")
-                                .args(&[path.to_str().unwrap(), target.to_str().unwrap()])
-                                .status()
-                                .unwrap()
-                                .success()
-                        );
+                        assert!(Command::new("cp")
+                            .args(&[path.to_str().unwrap(), target.to_str().unwrap()])
+                            .status()
+                            .unwrap()
+                            .success());
                     }
                 } else {
                     println!("E? {:?}", path);
