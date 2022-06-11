@@ -7,7 +7,7 @@ use std::path::Path;
 
 use chrono::NaiveDateTime;
 use dotenv::dotenv;
-use rusqlite::{OpenFlags, Connection};
+use rusqlite::{OpenFlags, Connection, NO_PARAMS};
 
 #[derive(Debug)]
 pub struct Image {
@@ -47,7 +47,7 @@ fn main() {
 
 fn count_rows(conn: &Connection, table: &str) -> u32 {
     let mut stmt = conn.prepare(&format!("SELECT COUNT(*) FROM {}", table)).unwrap();
-    let result = stmt.query_map(&[], |row| {
+    let result = stmt.query_map(NO_PARAMS, |row| {
         row.get::<_, u32>(0)
     }).unwrap();
     single(result).unwrap()
@@ -61,7 +61,7 @@ fn single<T: Iterator>(mut it: T) -> T::Item {
 
 fn duplicate_image_count(conn: &Connection) -> u32 {
     let mut stmt = conn.prepare("SELECT COUNT(*) FROM Images where id in (select id from Images group by uniqueHash having count(*) >= 2)").unwrap();
-    let result = stmt.query_map(&[], |row| {
+    let result = stmt.query_map(NO_PARAMS, |row| {
         row.get::<_, u32>(0)
     }).unwrap();
     single(result).unwrap()
@@ -69,7 +69,7 @@ fn duplicate_image_count(conn: &Connection) -> u32 {
 
 fn duplicate_images(conn: &Connection) -> Vec<&Path> {
     let mut stmt = conn.prepare("SELECT COUNT(*) FROM Images where id in (select id from Images group by uniqueHash having count(*) >= 2)").unwrap();
-    let result = stmt.query_map(&[], |row| {
+    let result = stmt.query_map(NO_PARAMS, |row| {
         row.get::<_, u32>(0)
     }).unwrap();
     single(result).unwrap();

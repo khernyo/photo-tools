@@ -150,6 +150,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "fallible-iterator"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4443176a9f2c162692bd3d352d745ef9413eec5782a80d8fd6f8a1ac692a07f7"
+
+[[package]]
+name = "fallible-streaming-iterator"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7360491ce676a36bf9bb3c56c1aa791658183a54d2744120f27285738d90465a"
+
+[[package]]
 name = "lazy_static"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -163,9 +175,9 @@ checksum = "b685088df2b950fccadf07a7187c8ef846a959c142338a48f9dc0b94517eb5f1"
 
 [[package]]
 name = "libsqlite3-sys"
-version = "0.9.4"
+version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0bb2c84bff2c4d43bf6866c786098f7b6a17714b0cbda3abc6323a6b7571a045"
+checksum = "5e5b95e89c330291768dc840238db7f9e204fd208511ab6319b56193a7f2ae25"
 dependencies = [
  "pkg-config",
  "vcpkg",
@@ -311,13 +323,16 @@ dependencies = [
 
 [[package]]
 name = "rusqlite"
-version = "0.14.0"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9d9118f1ce84d8d0b67f9779936432fb42bb620cef2122409d786892cce9a3c"
+checksum = "2a194373ef527035645a1bc21b10dc2125f73497e6e155771233eb187aedd051"
 dependencies = [
  "bitflags",
+ "fallible-iterator",
+ "fallible-streaming-iterator",
  "libsqlite3-sys",
  "lru-cache",
+ "memchr",
  "time",
 ]
 
